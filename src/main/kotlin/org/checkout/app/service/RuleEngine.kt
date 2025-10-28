@@ -1,4 +1,4 @@
-import org.checkout.app.service.CartRule
+package org.checkout.app.service
 
 class RuleEngine(
     val cartRules: MutableList<CartRule> = mutableListOf()

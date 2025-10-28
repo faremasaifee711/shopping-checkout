@@ -4,6 +4,8 @@ import org.checkout.app.model.Item
 import org.checkout.app.model.Customer
 import java.time.LocalDateTime
 
+import org.checkout.app.service.RuleEngine
+
 data class Cart(
     val items: MutableList<Item> = mutableListOf(),
     val customer: Customer,
@@ -24,8 +26,18 @@ data class Cart(
         this.totalPrice = items.sumByDouble { it.totalCostAfterTax() }
     }
 
-    fun checkoutCart() {
+    fun checkoutCart(ruleEngine: RuleEngine) {
+        println("Checking if any offer applicable on final cart")
         this.totalPrice = items.sumByDouble { it.totalCostAfterTax() }
+        println("Before Offer : " +  this.totalPrice)
+        ruleEngine.cartRules
+            .filter { rule -> 
+                rule.matches(this)
+            }
+            .forEach { matchingRule -> 
+                matchingRule.apply(this) 
+            }
+
     }
     
     override fun toString(): String {
