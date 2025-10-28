@@ -4,7 +4,7 @@ import org.checkout.app.model.Item
 import org.checkout.app.model.Customer
 import java.time.LocalDateTime
 
-import org.checkout.app.service.RuleEngine
+import org.checkout.app.service.PricingRules
 
 data class Cart(
     val items: MutableList<Item> = mutableListOf(),
@@ -23,14 +23,14 @@ data class Cart(
     }
 
     fun calculateCartlPrice() {
-        this.totalPrice = items.sumByDouble { it.totalCostAfterTax() }
+        this.totalPrice = items.sumOf { it.totalCostAfterTax() }
     }
 
-    fun checkoutCart(ruleEngine: RuleEngine) {
+    fun checkoutCart(pricingRules: PricingRules) {
         println("Checking if any offer applicable on final cart")
-        this.totalPrice = items.sumByDouble { it.totalCostAfterTax() }
+        this.totalPrice = items.sumOf { it.totalCostAfterTax() }
         println("Before Offer : " +  this.totalPrice)
-        ruleEngine.cartRules
+        pricingRules.cartRules
             .filter { rule -> 
                 rule.matches(this)
             }
@@ -47,5 +47,3 @@ data class Cart(
 
 //Usage:
 
-// val cart = Cart(items = listOf(Item("Sofa", 800.0, 1, Category.FURNITURE)), customer = Customer("John Doe"), totalPrice = 0.0, createdAt = LocalDateTime.now())
-// println("Cart: $cart")

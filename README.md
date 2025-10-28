@@ -34,5 +34,10 @@ Includes:
 
 https://www.youtube.com/watch?v=nXBW9Sdy4cY
 
+Commands mvn
+
+mvn clean package   
+mvn exec:java -Dexec.mainClass="org.checkout.app.AppKt"
+
 
 
