@@ -1,7 +1,7 @@
 package org.checkout.app.service
 
 import java.time.LocalDate
-import org.checkout.app.service.Rule
+import org.checkout.app.service.CartRule
 
-interface MultiBuyRule : Rule<String> {
+interface MultiBuyRule : CartRule {
 }

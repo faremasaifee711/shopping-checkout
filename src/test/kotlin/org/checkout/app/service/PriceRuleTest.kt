@@ -9,7 +9,7 @@ class PriceRuleTest {
 
     @Test
     fun `processData should trim and uppercase input`() {
-        val input = listOf(" test ")
+        val input = " test "
         val result = service.apply(input)
         assertEquals("TEST", result)
     }

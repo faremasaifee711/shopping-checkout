@@ -5,15 +5,15 @@ import org.checkout.app.service.PriceRule
 class PriceRuleImpl : PriceRule {
     override fun isPriceRule(item: String): Boolean {
         // Example: count matching dates
+        return item.length > 0
+    }
+
+    override fun matches(item: String): Boolean {
         return true
     }
 
-    override fun matches(items: List<String>): Boolean {
-        return items.size >= 3
-    }
-
-    override fun apply(items: List<String>): Double {
+    override fun apply(item: String): Double {
         // Example: count matching dates
-        return items.count { isPriceRule(it) }.toDouble()
+        return item.length.toDouble()
     }
 }
