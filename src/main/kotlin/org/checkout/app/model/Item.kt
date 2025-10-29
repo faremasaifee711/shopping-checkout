@@ -1,5 +1,13 @@
 package org.checkout.app.model
 
+/**
+ * Represents an item added to the cart with its associated details.
+ *
+ * @property name The name or SKU of the item.
+ * @property price The current price per unit after applying any adjustments.
+ * @property quantity The number of units of this item in the cart.
+ * @property category The category to which this item belongs (e.g., Grocery, Appliances).
+ */
 data class Item(
     val name: String,
     val price: Double,

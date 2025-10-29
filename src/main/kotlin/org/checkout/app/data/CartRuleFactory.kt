@@ -1,4 +1,4 @@
-package org.checkout.app.model
+package org.checkout.app.data
 
 import java.time.LocalDateTime
 import java.time.Month
@@ -20,7 +20,7 @@ object CartRuleFactory {
                 groupSize = 3,
                 groupPrice = 1.0,
                 unitPrice = 0.4,
-                description = "3 for £1 on Item A"
+                description = "3 for 1 Euro on Item A"
             )
 
             CartRuleType.ITEM_B -> MultiBuyRuleImpl(
@@ -28,10 +28,11 @@ object CartRuleFactory {
                 groupSize = 2,
                 groupPrice = 0.8,
                 unitPrice = 0.5,
-                description = "Buy 2 for £0.80 on Item B"
+                description = "Buy 2 for 0.80 Euro on Item B"
             )
 
             CartRuleType.BLACK_FRIDAY -> DateBasedRuleImpl(
+                itemName = "E",
                 description = "Black Friday 10% off",
                 condition = { it.month == Month.NOVEMBER && it.dayOfMonth == 28 },
                 discountPercent = 10.0

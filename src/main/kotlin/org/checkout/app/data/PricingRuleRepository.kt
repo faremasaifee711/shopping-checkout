@@ -10,6 +10,7 @@ interface PricingRuleRepository {
 }
 
 /**
+ * Responsible for loading and providing pricing rule configurations.
  * ✅ Could later be replaced by database, API, or JSON-backed repository
  * ✅ Returns domain-friendly PricingRule models, not raw config data
  */
@@ -18,7 +19,7 @@ class InMemoryPricingRuleRepository : PricingRuleRepository {
         PricingRule(
             id = 1,
             type = RuleType.MULTI_BUY,
-            description = "3 for £1 on Item A",
+            description = "3 for 1 Euro on Item A",
             itemName = "A",
             groupSize = 3,
             groupPrice = 1.0,

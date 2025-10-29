@@ -2,6 +2,7 @@ package org.checkout
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 
 import org.checkout.app.model.Account
 import org.checkout.app.model.Cart
@@ -47,6 +48,7 @@ class CheckoutTest {
         return cart;
     }
 
+     
     @Test fun totals() {
         assertEquals(140, priceOf("AAAA"))
         assertEquals(40, priceOf("A"))
@@ -63,8 +65,6 @@ class CheckoutTest {
         assertEquals(200, priceOf("DABABA")) 
     }
 
-    
-
     @Test fun incremental() {
         val co = Checkout(rules, customer2)
         assertEquals(0, co.total())
@@ -75,7 +75,6 @@ class CheckoutTest {
         co.scan("B"); assertEquals(180, co.total()) 
     }
 
-
     @Test fun skuE_blackFridayDiscount() {
         // Add test for 10% off E on November 28, 2025
         var co = Checkout(rules, customer2)
@@ -85,5 +84,10 @@ class CheckoutTest {
         co = Checkout(rules, customer2)
         //set the cart createdAt date to Nov 28 and check
         co.scanOnBlackFriday("E"); assertEquals(90, co.total())
+        co.scanOnBlackFriday("A"); assertTrue(co.total() in listOf(129, 130)) 
+        co.scanOnBlackFriday("A"); assertEquals(170, co.total())
+        co.scanOnBlackFriday("A"); assertEquals(190, co.total())
+        co.scanOnBlackFriday("B"); assertEquals(240, co.total()) 
+        co.scanOnBlackFriday("A"); assertEquals(280, co.total())
     }
 }
