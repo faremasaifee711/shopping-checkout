@@ -1,30 +1,40 @@
 package org.checkout.app.model
 
+import java.time.LocalDateTime
+
+
 import org.checkout.app.model.Item
 import org.checkout.app.model.Customer
-import java.time.LocalDateTime
+import org.checkout.app.service.PricingRules
+import org.checkout.app.service.CartRule
 
 data class Cart(
     val items: MutableList<Item> = mutableListOf(),
     val customer: Customer,
     var totalPrice: Double = 0.0, //val totalPrice: Double get() = items.sumOf { it.totalCostAfterTax() } //can use this instead of calculateCartlPrice()
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    var createdAt: LocalDateTime = LocalDateTime.now(),
+    var rules : List<CartRule> = listOf(),
 ) {
-    fun addItem(item: Item) {
-        // Find if the item already exists by name
-        val existingItemIndex = items.indexOfFirst { it.name == item.name }
+
+    init {
+        this.rules = listOf(
+            CartRuleFactory.create(CartRuleType.ITEM_A),
+            CartRuleFactory.create(CartRuleType.ITEM_B),
+            CartRuleFactory.create(CartRuleType.BLACK_FRIDAY)
+        )
+    }
+
+    fun addItem(item: Item, pricingRules: List<PricingRule>) {
+        val existingItemIndex = items.indexOfFirst { it.name.equals(item.name, ignoreCase = true) }
 
         if (existingItemIndex != -1) {
-            // Update the existing item quantity
             val existingItem = items[existingItemIndex]
-            val updatedItem = existingItem.copy(
-                quantity = existingItem.quantity + item.quantity
-            )
-            items[existingItemIndex] = updatedItem
+            val newQuantity = existingItem.quantity + item.quantity
+            items[existingItemIndex] = existingItem.copy(quantity = newQuantity)
         } else {
-            // Add as a new item
             items.add(item)
         }
+
         calculateCartlPrice()
     }
 
@@ -35,6 +45,11 @@ data class Cart(
 
     fun calculateCartlPrice() {
         this.totalPrice = items.sumOf { it.totalCostAfterTax() }
+        for (rule in this.rules) {
+            if (rule.matches(this)) {
+                this.totalPrice = rule.apply(this)
+            }
+        }
     }
     
     override fun toString(): String {

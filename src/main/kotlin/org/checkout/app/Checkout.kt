@@ -1,5 +1,8 @@
 package org.checkout.app
 
+import java.time.LocalDateTime
+import java.time.Month
+
 import org.checkout.app.model.Cart
 import org.checkout.app.model.Category
 import org.checkout.app.model.Item
@@ -22,22 +25,23 @@ class Checkout(private val pricingRules: PricingRules, private val customer: Cus
         // locate item by SKU, here you need a repository or lookup mechanism
         val item = findItemBySku(sku)
         if (item != null) {
-            cart.addItem(item)
+            cart.addItem(item, pricingRules.pricingRules)
         } else {
             println("Item with SKU $sku not found")
         }
+    }
+
+    fun scanOnBlackFriday(sku: String) {
+        cart.createdAt = LocalDateTime.of(2025, Month.NOVEMBER, 28, 0, 0)
+        scan(sku)
+
     }
 
     // Calculates and returns the total cart price in cents
     fun total(): Int {
         //cart.checkoutCart(pricingRules)
         // Converts totalPrice to cents as integer
-        // return (cart.totalPrice * 100).toInt()
-
-        //return pricingRules.cartRules.sumOf { rule ->
-         //   if (rule.matches(cart)) (rule.apply(cart) * 100).toInt() else 0
-        //}
-        return 1
+        return (cart.totalPrice * 100).toInt()
         
     }
 
