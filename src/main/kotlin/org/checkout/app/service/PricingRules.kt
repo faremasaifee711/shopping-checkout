@@ -5,8 +5,4 @@ import org.checkout.app.model.PricingRule
 
 class PricingRules (
     val pricingRules: List<PricingRule> = listOf()
-) {
-    
-}
-
-
+) 

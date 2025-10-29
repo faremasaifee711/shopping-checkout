@@ -17,6 +17,7 @@ data class Item(
     }
 }
 
+// For future we can add more categories to have a better tax system, or discounts across the entire category
 enum class Category(val taxRate: Double, val discountRate: Double) {
     GROCERY(taxRate = 0.00, discountRate = 0.0),
     APPLIANCES(taxRate = 0.18, discountRate = 0.10),

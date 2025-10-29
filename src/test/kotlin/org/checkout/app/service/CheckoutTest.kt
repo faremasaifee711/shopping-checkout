@@ -86,6 +86,4 @@ class CheckoutTest {
         //set the cart createdAt date to Nov 28 and check
         co.scanOnBlackFriday("E"); assertEquals(90, co.total())
     }
-
-
 }

@@ -11,7 +11,7 @@ import org.checkout.app.service.CartRule
 data class Cart(
     val items: MutableList<Item> = mutableListOf(),
     val customer: Customer,
-    var totalPrice: Double = 0.0, //val totalPrice: Double get() = items.sumOf { it.totalCostAfterTax() } //can use this instead of calculateCartlPrice()
+    var totalPrice: Double = 0.0,
     var createdAt: LocalDateTime = LocalDateTime.now(),
     var rules : List<CartRule> = listOf(),
 ) {
@@ -56,6 +56,3 @@ data class Cart(
         return "Cart(items=$items, customer=$customer, totalPrice=$totalPrice, createdAt=$createdAt)"
     }
 }
-
-//Usage:
-

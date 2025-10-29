@@ -14,12 +14,6 @@ import org.checkout.app.service.PricingRules
 class Checkout(private val pricingRules: PricingRules, private val customer: Customer) {
     private val cart = Cart(customer = customer)
 
-    init {
-        println("Beginning Checkout, Inserting pricing rules.")
-        // Add any additional initialization logic here
-    }
-    
-
     // Scans an item by SKU and adds it to cart
     fun scan(sku: String) {
         // locate item by SKU, here you need a repository or lookup mechanism
@@ -39,15 +33,12 @@ class Checkout(private val pricingRules: PricingRules, private val customer: Cus
 
     // Calculates and returns the total cart price in cents
     fun total(): Int {
-        //cart.checkoutCart(pricingRules)
         // Converts totalPrice to cents as integer
         return (cart.totalPrice * 100).toInt()
-        
     }
 
     // Actual lookup logic, from in-memory list
     private fun findItemBySku(sku: String): Item? {
-
         val pricingRule: PricingRule? = pricingRules.pricingRules
             .firstOrNull { rule -> rule.itemName.equals(sku, ignoreCase = true) }
             
@@ -59,6 +50,5 @@ class Checkout(private val pricingRules: PricingRules, private val customer: Cus
                 category = Category.GROCERY // Replace with actual category logic
             )
         }
-        
     }
 }
