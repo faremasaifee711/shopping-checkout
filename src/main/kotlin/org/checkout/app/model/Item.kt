@@ -4,7 +4,7 @@ data class Item(
     val name: String,
     val price: Double,
     val quantity: Int,
-    val category: Category
+    val category: Category = Category.GROCERY
 ) {
     fun totalCostBeforeTax(): Double {
         val discountedPrice = price * (1 - category.discountRate)
@@ -17,15 +17,8 @@ data class Item(
     }
 }
 
-//can add sku: String here as well
-
-//Usage:
-
-// val item = Item("Sofa", 800.0, 1, Category.FURNITURE)
-// println("Item: ${item.name}, Total cost: ${item.totalCostAfterTax()}, Category: ${item.category}")
-
 enum class Category(val taxRate: Double, val discountRate: Double) {
-    GROCERY(taxRate = 0.05, discountRate = 0.0),
+    GROCERY(taxRate = 0.00, discountRate = 0.0),
     APPLIANCES(taxRate = 0.18, discountRate = 0.10),
     FURNITURE(taxRate = 0.12, discountRate = 0.05)
 }

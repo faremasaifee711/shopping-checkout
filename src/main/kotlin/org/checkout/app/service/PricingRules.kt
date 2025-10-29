@@ -1,14 +1,12 @@
 package org.checkout.app.service
 
 import java.time.LocalDate
-import org.checkout.app.service.CartRule
+import org.checkout.app.model.PricingRule
 
 class PricingRules (
-    val cartRules: MutableList<CartRule> = mutableListOf()
+    val pricingRules: List<PricingRule> = listOf()
 ) {
-    fun addRule(cartRule: CartRule) {
-        cartRules.add(cartRule)
-    }
+    
 }
 
 

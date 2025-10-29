@@ -4,8 +4,6 @@ import org.checkout.app.model.Item
 import org.checkout.app.model.Customer
 import java.time.LocalDateTime
 
-import org.checkout.app.service.PricingRules
-
 data class Cart(
     val items: MutableList<Item> = mutableListOf(),
     val customer: Customer,
@@ -13,7 +11,20 @@ data class Cart(
     val createdAt: LocalDateTime = LocalDateTime.now()
 ) {
     fun addItem(item: Item) {
-        items.add(item)
+        // Find if the item already exists by name
+        val existingItemIndex = items.indexOfFirst { it.name == item.name }
+
+        if (existingItemIndex != -1) {
+            // Update the existing item quantity
+            val existingItem = items[existingItemIndex]
+            val updatedItem = existingItem.copy(
+                quantity = existingItem.quantity + item.quantity
+            )
+            items[existingItemIndex] = updatedItem
+        } else {
+            // Add as a new item
+            items.add(item)
+        }
         calculateCartlPrice()
     }
 
@@ -24,20 +35,6 @@ data class Cart(
 
     fun calculateCartlPrice() {
         this.totalPrice = items.sumOf { it.totalCostAfterTax() }
-    }
-
-    fun checkoutCart(pricingRules: PricingRules) {
-        println("Checking if any offer applicable on final cart")
-        this.totalPrice = items.sumOf { it.totalCostAfterTax() }
-        println("Before Offer : " +  this.totalPrice)
-        pricingRules.cartRules
-            .filter { rule -> 
-                rule.matches(this)
-            }
-            .forEach { matchingRule -> 
-                matchingRule.apply(this) 
-            }
-
     }
     
     override fun toString(): String {
