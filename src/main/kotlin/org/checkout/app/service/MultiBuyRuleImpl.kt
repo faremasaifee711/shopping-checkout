@@ -1,6 +1,5 @@
 package org.checkout.app.service
 
-import org.checkout.app.service.MultiBuyRule
 import org.checkout.app.model.Cart
 
 /**
@@ -26,7 +25,7 @@ class MultiBuyRuleImpl(
      * @return true if any item matches; false otherwise.
      */
     override fun matches(cart: Cart): Boolean {
-        return cart.items.any { it.name.equals(itemName, ignoreCase = true) && it.quantity > 0 }
+        return cart.cartItems.any { it.name.equals(itemName, ignoreCase = true) && it.quantity > 0 }
     }
 
     /**
@@ -40,7 +39,7 @@ class MultiBuyRuleImpl(
         var discount = 0.0
     
         // Find the item matching this rule
-        val item = cart.items.find { it.name.equals(itemName, ignoreCase = true) }
+        val item = cart.cartItems.find { it.name.equals(itemName, ignoreCase = true) }
     
         if (item != null && item.quantity >= groupSize) {
             val groups = item.quantity / groupSize

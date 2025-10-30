@@ -1,5 +1,5 @@
 package org.checkout.app.service
 
-interface DateBasedRule : CartRule {
+interface DateBasedRule : PricingRule {
 }
 

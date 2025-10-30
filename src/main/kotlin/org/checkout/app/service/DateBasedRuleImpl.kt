@@ -1,11 +1,7 @@
 package org.checkout.app.service
 
 import java.time.LocalDateTime
-import java.time.Month
-import org.checkout.app.service.DateBasedRule
 import org.checkout.app.model.Cart
-import org.checkout.app.model.Item
-import org.checkout.app.model.Category
 
 /**
  * Generic implementation for time-sensitive discounts (e.g. Black Friday 10% off).
@@ -36,7 +32,7 @@ class DateBasedRuleImpl(
         var discount = 0.0
     
         // Find the item matching this rule
-        val item = cart.items.find { it.name.equals(itemName, ignoreCase = true) }
+        val item = cart.cartItems.find { it.name.equals(itemName, ignoreCase = true) }
     
         if (item != null) {
             

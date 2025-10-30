@@ -21,6 +21,7 @@ In this project, we delve into the low-level design of a shopping cart with offe
 - Tax is **not yet modeled** (prices are pre-tax).
 
 ### 💰 Pricing Rules
+- Discounts are calculated on Cart level, not cartItem level.
 - Rules are implemented using the `Rule<T>` and `CartRule` interfaces.  
 - Each rule defines how to **match** a cart condition and **apply** a discount.
 - Only **one active pricing rule** applies per product (no stacking).

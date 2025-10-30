@@ -2,62 +2,59 @@ package org.checkout.app.model
 
 import java.time.LocalDateTime
 
-import org.checkout.app.data.CartRuleFactory
-import org.checkout.app.data.CartRuleType
-import org.checkout.app.model.Item
-import org.checkout.app.model.Customer
-import org.checkout.app.service.PricingRules
-import org.checkout.app.service.CartRule
+import org.checkout.app.data.PricingRuleFactory
+import org.checkout.app.data.PricingRuleType
+import org.checkout.app.service.PricingRule
 
 /**
  * The shopping cart which holds items selected by the customer.
  * Responsible for managing items, updating quantities, and calculating the total price.
  *
- * @property items The mutable list of items currently in the cart.
+ * @property cartItems The mutable list of items currently in the cart.
  * @property customer The customer associated with this cart.
  * @property totalPrice The current total price of the cart, accounting for discounts and pricing rules.
  * @property createdAt The date and time when the cart is created
  * @property rules The Pricing rules which can determine discounts to be applied on total price of cart
  */
 data class Cart(
-    val items: MutableList<Item> = mutableListOf(),
+    val cartItems: MutableList<CartItem> = mutableListOf(),
     val customer: Customer,
     var totalPrice: Double = 0.0,
     var createdAt: LocalDateTime = LocalDateTime.now(),
-    var rules : List<CartRule> = listOf(),
+    var rules : List<PricingRule> = listOf(),
 ) {
 
     init {
         this.rules = listOf(
-            CartRuleFactory.create(CartRuleType.ITEM_A),
-            CartRuleFactory.create(CartRuleType.ITEM_B),
-            CartRuleFactory.create(CartRuleType.BLACK_FRIDAY)
+            PricingRuleFactory.create(PricingRuleType.ITEM_A),
+            PricingRuleFactory.create(PricingRuleType.ITEM_B),
+            PricingRuleFactory.create(PricingRuleType.BLACK_FRIDAY)
         )
     }
 
     /**
      * Adds an item to the cart. If the item already exists, updates the quantity and recalculates price based on pricing rules.
      *
-     * @param item The item to add or update in the cart.
+     * @param cartItem The item to add or update in the cart.
      * @param pricingRules List of pricing rules to apply for pricing adjustments and discounts.
      */
-    fun addItem(item: Item, pricingRules: List<PricingRule>) {
-        val existingItemIndex = items.indexOfFirst { it.name.equals(item.name, ignoreCase = true) }
+    fun addItem(cartItem: CartItem) {
+        val existingItemIndex = cartItems.indexOfFirst { it.name.equals(cartItem.name, ignoreCase = true) }
 
         if (existingItemIndex != -1) {
-            val existingItem = items[existingItemIndex]
-            val newQuantity = existingItem.quantity + item.quantity
-            items[existingItemIndex] = existingItem.copy(quantity = newQuantity)
+            val existingItem = cartItems[existingItemIndex]
+            val newQuantity = existingItem.quantity + cartItem.quantity
+            cartItems[existingItemIndex] = existingItem.copy(quantity = newQuantity)
         } else {
-            items.add(item)
+            cartItems.add(cartItem)
         }
 
-        calculateCartlPrice()
+        calculateCartPrice()
     }
 
-    fun removeItem(item: Item) {
-        items.remove(item)
-        calculateCartlPrice()
+    fun removeItem(cartItem: CartItem) {
+        cartItems.remove(cartItem)
+        calculateCartPrice()
     }
 
     /**
@@ -65,19 +62,19 @@ data class Cart(
      * Applies pricing rules on the cart
      * Should be called whenever the cart's content changes to keep the total price accurate.
      */
-    fun calculateCartlPrice() {
-        this.totalPrice = items.sumOf { it.totalCostAfterTax() }
+    fun calculateCartPrice() {
+        this.totalPrice = cartItems.sumOf { it.totalCostAfterTax() }
         this.applyPricingRules()
     }
 
     fun applyPricingRules() {
-        val baseTotal = items.sumOf { it.price * it.quantity }
+        val baseTotal = cartItems.sumOf { it.price * it.quantity }
         val totalDiscount = this.rules.filter { it.matches(this) }
             .sumOf { it.apply(this) }
         this.totalPrice = baseTotal - totalDiscount
     }
     
     override fun toString(): String {
-        return "Cart(items=$items, customer=$customer, totalPrice=$totalPrice, createdAt=$createdAt)"
+        return "Cart(items=$cartItems, customer=$customer, totalPrice=$totalPrice, createdAt=$createdAt)"
     }
 }

@@ -1,33 +1,21 @@
 package org.checkout.app.model
 
+import java.time.LocalDateTime
+import java.time.Month
+
 /**
- * Represents an item added to the cart with its associated details.
+ * Represents a product pricing rule that defines how the price is calculated or discounted
+ * based on specific conditions such as bulk quantity or date-based discounts.
  *
- * @property name The name or SKU of the item.
- * @property price The current price per unit after applying any adjustments.
- * @property quantity The number of units of this item in the cart.
- * @property category The category to which this item belongs (e.g., Grocery, Appliances).
+ * @property itemName The unique identifier for the product (typically a SKU or a code).
+ * @property unitPrice The standard price for a single unit of the product.
+ * @property groupSize Optional minimum quantity for bulk discount eligibility.
+ * @property groupPrice Optional price per group of items for bulk pricing.
+ * @property discountPercent Optional percentage discount applied on special dates.
+ * @property day Optional date when the discount is valid.
  */
 data class Item(
-    val name: String,
-    val price: Double,
-    val quantity: Int,
-    val category: Category = Category.GROCERY
-) {
-    fun totalCostBeforeTax(): Double {
-        val discountedPrice = price * (1 - category.discountRate)
-        return discountedPrice * quantity
-    }
-
-    fun totalCostAfterTax(): Double {
-        val base = totalCostBeforeTax()
-        return base * (1 + category.taxRate)
-    }
-}
-
-// For future we can add more categories to have a better tax system, or discounts across the entire category
-enum class Category(val taxRate: Double, val discountRate: Double) {
-    GROCERY(taxRate = 0.00, discountRate = 0.0),
-    APPLIANCES(taxRate = 0.18, discountRate = 0.10),
-    FURNITURE(taxRate = 0.12, discountRate = 0.05)
-}
+    val id: Int,
+    val itemName: String,
+    val unitPrice: Double,
+)

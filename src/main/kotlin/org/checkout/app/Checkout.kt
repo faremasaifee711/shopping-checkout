@@ -5,13 +5,13 @@ import java.time.Month
 
 import org.checkout.app.model.Cart
 import org.checkout.app.model.Category
-import org.checkout.app.model.Item
+import org.checkout.app.model.CartItem
 import org.checkout.app.model.Customer
-import org.checkout.app.model.PricingRule
-import org.checkout.app.service.PricingRules
+import org.checkout.app.model.Item
+import org.checkout.app.service.ItemList
 
 
-class Checkout(private val pricingRules: PricingRules, private val customer: Customer) {
+class Checkout(private val itemList: ItemList, private val customer: Customer) {
     private val cart = Cart(customer = customer)
 
     // Scans an item by SKU and adds it to cart
@@ -19,7 +19,7 @@ class Checkout(private val pricingRules: PricingRules, private val customer: Cus
         // locate item by SKU, here you need a repository or lookup mechanism
         val item = findItemBySku(sku)
         if (item != null) {
-            cart.addItem(item, pricingRules.pricingRules)
+            cart.addItem(item)
         } else {
             println("Item with SKU $sku not found")
         }
@@ -38,14 +38,14 @@ class Checkout(private val pricingRules: PricingRules, private val customer: Cus
     }
 
     // Actual lookup logic, from in-memory list
-    private fun findItemBySku(sku: String): Item? {
-        val pricingRule: PricingRule? = pricingRules.pricingRules
-            .firstOrNull { rule -> rule.itemName.equals(sku, ignoreCase = true) }
+    private fun findItemBySku(sku: String): CartItem? {
+        val items: Item? = itemList.items
+            .firstOrNull { item -> item.itemName.equals(sku, ignoreCase = true) }
             
-        return pricingRule?.let { rule ->
-            Item(
-                name = rule.itemName,
-                price = rule.unitPrice,
+        return items?.let { item ->
+            CartItem(
+                name = item.itemName,
+                price = item.unitPrice,
                 quantity = 1,  // Default quantity
                 category = Category.GROCERY // Replace with actual category logic
             )
